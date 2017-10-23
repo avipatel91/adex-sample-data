@@ -14,8 +14,8 @@ function getUserStayTime()
 	var maximum = 180
 	var minimum = 2
 	// power law distribution
-	return Math.floor(Math.exp(rand*Math.log(maximum-minimum+1)))+minimum
+	return Math.floor((Math.exp(rand*Math.log(maximum-minimum+1))+minimum) * 1000)
 }
 
 // test power law distribution
-//for(var i=0; i!=100; i++)console.log(getUserStayTime())
+for(var i=0; i!=100; i++)console.log(getUserStayTime())
