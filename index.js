@@ -10,5 +10,12 @@ function getUserStayTime()
 	// 2 seconds minimum stay
 	// 3 minutes max stay
 	// To the power of 2, to make it lean more towards the low values
-	return 2 + Math.floor(Math.pow(Math.random(), 2) * 180)
+	var rand = Math.random()
+	var maximum = 180
+	var minimum = 2
+	// power law distribution
+	return Math.floor(Math.exp(rand*Math.log(maximum-minimum+1)))+minimum
 }
+
+// test power law distribution
+//for(var i=0; i!=100; i++)console.log(getUserStayTime())
