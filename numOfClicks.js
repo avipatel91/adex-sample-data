@@ -63,9 +63,11 @@ for (uid = 0 ; true; uid++) {
 
 	// merge with the global dataset
 	dataset = dataset.concat(udataset)
-	dataset = dataset.sort(function(a,b) { return a.time - b.time })
 
 	if (clicks === 0) break
 }
+
+
+dataset = dataset.sort(function(a,b) { return a.time - b.time })
 
 console.log(JSON.stringify(dataset, null, 4))
