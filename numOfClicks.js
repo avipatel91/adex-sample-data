@@ -8,9 +8,9 @@ var ADUNIT_ID = 43
 
 var CLICK_EV_RATIO = 0.05 // 5% of users will register a 'click' event
 var LEAVE_EV_RATIO = 0.8 // 80% of users will register a 'leave' event
-var filename = null;
+var filename = null
 
-var TOTAL_TIME = 30 * 60 
+var TOTAL_TIME = 30 * 60
 
 function getUserStayTime()
 {
@@ -76,7 +76,7 @@ dataset = dataset.sort(function(a,b) { return a.time - b.time })
 
 if (filename) {
 	fs.writeFile(filename, JSON.stringify(dataset, null, 4), e => {
-		if (e) throw e;
+		if (e) throw e
 	})
 } else {
 	console.log(JSON.stringify(dataset, null, 4))
