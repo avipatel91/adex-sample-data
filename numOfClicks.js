@@ -1,23 +1,24 @@
 #!/usr/bin/env node
 
-let argv = require('minimist')(process.argv.slice(2))
+var argv = require('minimist')(process.argv.slice(2))
 
 
-const BID_ID = 42
-const ADUNIT_ID = 43
+var BID_ID = 42
+var ADUNIT_ID = 43
 
-const CLICK_EV_RATIO = 0.05 // 5% of users will register a 'click' event
-const LEAVE_EV_RATIO = 0.8 // 80% of users will register a 'leave' event
+var CLICK_EV_RATIO = 0.05 // 5% of users will register a 'click' event
+var LEAVE_EV_RATIO = 0.8 // 80% of users will register a 'leave' event
 
-const TOTAL_TIME = 30 * 60
+var TOTAL_TIME = 30 * 60
 
-function getUserStayTime() {
+function getUserStayTime()
+{
     // 2 seconds minimum stay
     // 3 minutes max stay
     // To the power of 2, to make it lean more towards the low values
-    let rand = Math.random()
-    let maximum = 180
-    let minimum = 2
+    var rand = Math.random()
+    var maximum = 180
+    var minimum = 2
     // power law distribution
     return Math.floor((Math.exp(rand*Math.log(maximum-minimum+1))+minimum) * 1000)
 }
@@ -25,7 +26,7 @@ function getUserStayTime() {
 // test power law distribution
 //for(var i=0; i!=100; i++)console.log(getUserStayTime())
 
-let clicks = argv._[0]
+var clicks = argv._[0]
 if (isNaN(clicks)) {
     console.log('usage: ./genSample <num of clicks> [--totalTime=<total time in seconds>] [--clickChance=<floating point of chance to click>]')
     process.exit(1)
@@ -34,22 +35,22 @@ if (isNaN(clicks)) {
 if (argv.totalTime) TOTAL_TIME = argv.totalTime
 if (argv.clickChance) CLICK_EV_RATIO = parseFloat(argv.clickChance)
 
-let uid = 0
-let dataset = []
+var uid = 0
+var dataset = []
 
 for (uid = 0 ; true; uid++) {
-    let udataset = []
+    var udataset = []
 
-    let stayTime = getUserStayTime()
+    var stayTime = getUserStayTime()
 
-    let willClick = Math.random() < CLICK_EV_RATIO
-    let willRegLeave = Math.random() < LEAVE_EV_RATIO
+    var willClick = Math.random() < CLICK_EV_RATIO
+    var willRegLeave = Math.random() < LEAVE_EV_RATIO
 
     // we pray for uniform distribution.
-    let whenStart = new Date(Date.now() + Math.floor( Math.random() * TOTAL_TIME*1000 ) )
-    let whenLoad = new Date(whenStart.getTime() - Math.floor(300*Math.random()) )
-    let whenClick = new Date(whenStart.getTime() + Math.floor(stayTime * Math.random()) ) // inaccurate, but let's roll with it
-    let whenLeave = new Date(whenStart.getTime() + stayTime)
+    var whenStart = new Date(Date.now() + Math.floor( Math.random() * TOTAL_TIME*1000 ) )
+    var whenLoad = new Date(whenStart.getTime() - Math.floor(300*Math.random()) )
+    var whenClick = new Date(whenStart.getTime() + Math.floor(stayTime * Math.random()) ) // inaccurate, but let's roll with it
+    var whenLeave = new Date(whenStart.getTime() + stayTime)
 
     // fill in the dataset
     //udataset.push({ time: whenLoad, type: 'load' })
@@ -67,6 +68,6 @@ for (uid = 0 ; true; uid++) {
 }
 
 
-dataset = dataset.sort((a,b) => a.time - b.time)
+dataset = dataset.sort(function(a,b) { return a.time - b.time })
 
 console.log(JSON.stringify(dataset, null, 4))
