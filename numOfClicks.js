@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 var argv = require('minimist')(process.argv.slice(2))
+var fs = require('fs')
+
 
 
 var BID_ID = 42
@@ -8,6 +10,8 @@ var ADUNIT_ID = 43
 
 var CLICK_EV_RATIO = 0.05 // 5% of users will register a 'click' event
 var LEAVE_EV_RATIO = 0.8 // 80% of users will register a 'leave' event
+var filename = null;
+
 
 var TOTAL_TIME = 30 * 60 
 
@@ -28,12 +32,16 @@ function getUserStayTime()
 
 var clicks = argv._[0]
 if (isNaN(clicks)) {
-	console.log('usage: ./genSample <num of clicks> [--totalTime=<total time in seconds>] [--clickChance=<floating point of chance to click>]')
+	console.log('usage: ./genSample <num of clicks>'
+		+ ' [--totalTime=<total time in seconds>]'
+		+ ' [--clickChance=<floating point of chance to click>]'
+		+ ' [--filename=<name of file to write to>]')
 	process.exit(1)
 }
 
 if (argv.totalTime) TOTAL_TIME = argv.totalTime
 if (argv.clickChance) CLICK_EV_RATIO = parseFloat(argv.clickChance)
+if (argv.filename) filename = argv.filename
 
 var uid = 0
 var dataset = []
@@ -67,7 +75,12 @@ for (uid = 0 ; true; uid++) {
 	if (clicks === 0) break
 }
 
-
 dataset = dataset.sort(function(a,b) { return a.time - b.time })
 
-console.log(JSON.stringify(dataset, null, 4))
+if (filename) {
+	fs.writeFile(filename, JSON.stringify(dataset, null, 4), e => {
+		if (e) throw e;
+	})
+} else {
+	console.log(JSON.stringify(dataset, null, 4))
+}
