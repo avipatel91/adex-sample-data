@@ -1,20 +1,15 @@
 #!/usr/bin/env node
 
 let argv = require('minimist')(process.argv.slice(2))
-const fs = require('fs')
+
 
 const BID_ID = 42
 const ADUNIT_ID = 43
 
-let click_ev_ratio = 0.05 // 5% of users will register a 'click' event
-let leave_ev_ratio = 0.8 // 80% of users will register a 'leave' event
-let filename = null;
+const CLICK_EV_RATIO = 0.05 // 5% of users will register a 'click' event
+const LEAVE_EV_RATIO = 0.8 // 80% of users will register a 'leave' event
 
-let total_time = 30 * 60
-
-function writeToFile(dataset) {
-
-}
+const TOTAL_TIME = 30 * 60
 
 function getUserStayTime() {
     // 2 seconds minimum stay
@@ -32,16 +27,12 @@ function getUserStayTime() {
 
 let clicks = argv._[0]
 if (isNaN(clicks)) {
-    console.log('usage: ./genSample <num of clicks>'
-            + ' [--totalTime=<total time in seconds>]'
-            + ' [--clickChance=<floating point of chance to click>]'
-            + ' [--filename=<name of file to write to>]')
+    console.log('usage: ./genSample <num of clicks> [--totalTime=<total time in seconds>] [--clickChance=<floating point of chance to click>]')
     process.exit(1)
 }
 
-if (argv.totalTime) total_time = argv.totalTime
-if (argv.clickChance) click_ev_ratio = parseFloat(argv.clickChance)
-if (argv.filename) filename = argv.filename
+if (argv.totalTime) TOTAL_TIME = argv.totalTime
+if (argv.clickChance) CLICK_EV_RATIO = parseFloat(argv.clickChance)
 
 let uid = 0
 let dataset = []
@@ -51,11 +42,11 @@ for (uid = 0 ; true; uid++) {
 
     let stayTime = getUserStayTime()
 
-    let willClick = Math.random() < click_ev_ratio
-    let willRegLeave = Math.random() < leave_ev_ratio
+    let willClick = Math.random() < CLICK_EV_RATIO
+    let willRegLeave = Math.random() < LEAVE_EV_RATIO
 
     // we pray for uniform distribution.
-    let whenStart = new Date(Date.now() + Math.floor( Math.random() * total_time*1000 ) )
+    let whenStart = new Date(Date.now() + Math.floor( Math.random() * TOTAL_TIME*1000 ) )
     let whenLoad = new Date(whenStart.getTime() - Math.floor(300*Math.random()) )
     let whenClick = new Date(whenStart.getTime() + Math.floor(stayTime * Math.random()) ) // inaccurate, but let's roll with it
     let whenLeave = new Date(whenStart.getTime() + stayTime)
@@ -77,11 +68,5 @@ for (uid = 0 ; true; uid++) {
 
 
 dataset = dataset.sort((a,b) => a.time - b.time)
-if (filename){
-    fs.writeFile(filename, JSON.stringify(dataset, null, 4), e => {
-        if (e) throw e;
-    })
-} else {
-    console.log(JSON.stringify(dataset, null, 4))
-}
 
+console.log(JSON.stringify(dataset, null, 4))
