@@ -3,15 +3,12 @@
 var argv = require('minimist')(process.argv.slice(2))
 var fs = require('fs')
 
-
-
 var BID_ID = 42
 var ADUNIT_ID = 43
 
 var CLICK_EV_RATIO = 0.05 // 5% of users will register a 'click' event
 var LEAVE_EV_RATIO = 0.8 // 80% of users will register a 'leave' event
 var filename = null;
-
 
 var TOTAL_TIME = 30 * 60 
 
